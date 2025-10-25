@@ -209,7 +209,7 @@ def predict_fallacy(text):
         }
 
 # Header
-st.markdown('<h1 class="main-header">💭 Logical Fallacy Detector</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-header">🧠 Logical Fallacy Detector</h1>', unsafe_allow_html=True)
 st.markdown('<p class="subtitle">AI-powered analysis to identify logical fallacies in arguments</p>', unsafe_allow_html=True)
 
 # Sidebar
