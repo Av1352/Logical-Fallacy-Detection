@@ -12,38 +12,38 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for professional styling
+# Custom CSS optimized for DARK THEME
 st.markdown("""
 <style>
     .main-header {
         font-size: 2.8rem;
         font-weight: 700;
-        color: #2c3e50;
+        color: #ffffff;
         text-align: center;
         margin-bottom: 0.5rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
     }
     .subtitle {
         text-align: center;
-        color: #7f8c8d;
+        color: #b0b0b0;
         font-size: 1.1rem;
         margin-bottom: 2rem;
     }
     .fallacy-card {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background: rgba(255, 107, 157, 0.1);
         padding: 2rem;
         border-radius: 15px;
-        border-left: 6px solid #667eea;
+        border-left: 6px solid #ff6b9d;
         margin: 1.5rem 0;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px rgba(255, 107, 157, 0.2);
+    }
+    .fallacy-card h2 {
+        color: #ff6b9d !important;
     }
     .metric-card {
-        background: white;
+        background: rgba(255, 255, 255, 0.05);
         padding: 1.5rem;
         border-radius: 12px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         text-align: center;
     }
     .stButton>button {
@@ -53,7 +53,29 @@ st.markdown("""
     }
     .stButton>button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 4px 12px rgba(255, 107, 157, 0.4);
+    }
+    .stButton>button[kind="primary"] {
+        background-color: #ff6b9d !important;
+        border-color: #ff6b9d !important;
+        color: #ffffff !important;
+    }
+    .stButton>button[kind="primary"]:hover {
+        background-color: #ff4d85 !important;
+        border-color: #ff4d85 !important;
+    }
+    /* Make tabs more visible in dark mode */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        padding: 8px 16px;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: rgba(255, 107, 157, 0.2) !important;
+        border-bottom: 2px solid #ff6b9d !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -148,7 +170,6 @@ def predict_fallacy(text):
     """Simple keyword-based fallacy detection for demo"""
     text_lower = text.lower()
     
-    # Pattern matching for different fallacies
     if any(word in text_lower for word in ['you', 'your', 'he', 'she', 'they']) and \
        any(word in text_lower for word in ["can't trust", "not even", "never", "just"]):
         return {
@@ -188,7 +209,7 @@ def predict_fallacy(text):
         }
 
 # Header
-st.markdown('<h1 class="main-header">🧠 Logical Fallacy Detector</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-header">💭 Logical Fallacy Detector</h1>', unsafe_allow_html=True)
 st.markdown('<p class="subtitle">AI-powered analysis to identify logical fallacies in arguments</p>', unsafe_allow_html=True)
 
 # Sidebar
@@ -285,52 +306,49 @@ with tab1:
         with st.spinner("🤖 Analyzing text..."):
             prediction = predict_fallacy(user_input)
             
-            # Only show if confidence meets threshold
             if prediction['confidence'] >= confidence_threshold:
                 st.markdown("---")
                 st.subheader("📊 Analysis Results")
                 
-                # Results layout
                 col1, col2 = st.columns([3, 2])
                 
                 with col1:
                     fallacy_name = FALLACY_INFO.get(prediction['fallacy'], {}).get('name', prediction['fallacy'].title())
                     st.markdown(f"""
                     <div class="fallacy-card">
-                        <h2 style="color: #667eea; margin-top: 0;">🎯 {fallacy_name}</h2>
+                        <h2 style="color: #ff6b9d; margin-top: 0;">🎯 {fallacy_name}</h2>
                         <p style="font-size: 1.1rem; margin: 1rem 0;">
                             <strong>Confidence:</strong> 
-                            <span style="color: #27ae60; font-size: 1.3rem; font-weight: bold;">
+                            <span style="color: #4ade80; font-size: 1.3rem; font-weight: bold;">
                                 {prediction['confidence']:.1%}
                             </span>
                         </p>
-                        <p style="color: #34495e; line-height: 1.6;">
+                        <p style="color: #e0e0e0; line-height: 1.6;">
                             <strong>Explanation:</strong> {prediction['explanation']}
                         </p>
                     </div>
                     """, unsafe_allow_html=True)
                 
                 with col2:
-                    # Confidence gauge
                     fig = go.Figure(go.Indicator(
                         mode="gauge+number",
                         value=prediction['confidence'] * 100,
                         domain={'x': [0, 1], 'y': [0, 1]},
-                        title={'text': "Confidence Score", 'font': {'size': 20}},
-                        number={'suffix': "%", 'font': {'size': 40}},
+                        title={'text': "Confidence Score", 'font': {'size': 20, 'color': '#ff6b9d'}},
+                        number={'suffix': "%", 'font': {'size': 40, 'color': '#ff6b9d'}},
                         gauge={
-                            'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
-                            'bar': {'color': "#667eea"},
-                            'bgcolor': "white",
+                            'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "#ff6b9d"},
+                            'bar': {'color': "#ff6b9d"},
+                            'bgcolor': "rgba(255, 255, 255, 0.05)",
                             'borderwidth': 2,
-                            'bordercolor': "gray",
+                            'bordercolor': "#ff6b9d",
                             'steps': [
-                                {'range': [0, 50], 'color': '#ffebee'},
-                                {'range': [50, 75], 'color': '#fff9c4'},
-                                {'range': [75, 100], 'color': '#c8e6c9'}
+                                {'range': [0, 50], 'color': 'rgba(255, 107, 157, 0.1)'},
+                                {'range': [50, 75], 'color': 'rgba(255, 107, 157, 0.2)'},
+                                {'range': [75, 100], 'color': 'rgba(255, 107, 157, 0.3)'}
                             ],
                             'threshold': {
-                                'line': {'color': "red", 'width': 4},
+                                'line': {'color': "#4ade80", 'width': 4},
                                 'thickness': 0.75,
                                 'value': 90
                             }
@@ -339,11 +357,11 @@ with tab1:
                     fig.update_layout(
                         height=300,
                         margin=dict(l=20, r=20, t=50, b=20),
-                        font={'color': "darkblue", 'family': "Arial"}
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        font={'color': "#ff6b9d", 'family': "Arial"}
                     )
                     st.plotly_chart(fig, use_container_width=True)
                 
-                # Detailed information
                 with st.expander("📚 Learn More About This Fallacy", expanded=False):
                     if prediction['fallacy'] in FALLACY_INFO:
                         info = FALLACY_INFO[prediction['fallacy']]
@@ -351,7 +369,6 @@ with tab1:
                         st.markdown(f"**Why it's problematic:** {info['why_problematic']}")
                         st.markdown(f"**Example:** *\"{info['example']}\"*")
                 
-                # Add to history
                 st.session_state.analysis_history.append({
                     'text': user_input[:100] + "..." if len(user_input) > 100 else user_input,
                     'fallacy': fallacy_name,
@@ -390,10 +407,8 @@ with tab3:
     st.header("📈 Analysis History")
     
     if st.session_state.analysis_history:
-        # Create DataFrame
         history_df = pd.DataFrame(st.session_state.analysis_history)
         
-        # Summary metrics
         col1, col2, col3 = st.columns(3)
         with col1:
             st.metric("Total Analyses", len(history_df))
@@ -406,7 +421,6 @@ with tab3:
         
         st.markdown("---")
         
-        # Visualizations
         col1, col2 = st.columns(2)
         
         with col1:
@@ -416,10 +430,16 @@ with tab3:
                 values=fallacy_counts.values,
                 names=fallacy_counts.index,
                 hole=0.4,
-                color_discrete_sequence=px.colors.sequential.Purples_r
+                color_discrete_sequence=['#ff6b9d', '#ff8fb3', '#ffb3c9', '#ffd7df', '#ffe0eb']
             )
             fig.update_traces(textposition='inside', textinfo='percent+label')
-            fig.update_layout(showlegend=False, height=350)
+            fig.update_layout(
+                showlegend=False, 
+                height=350,
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                font={'color': '#ffffff'}
+            )
             st.plotly_chart(fig, use_container_width=True)
         
         with col2:
@@ -428,17 +448,19 @@ with tab3:
                 history_df,
                 x='confidence',
                 nbins=10,
-                color_discrete_sequence=['#667eea']
+                color_discrete_sequence=['#ff6b9d']
             )
             fig.update_layout(
                 xaxis_title="Confidence",
                 yaxis_title="Count",
                 showlegend=False,
-                height=350
+                height=350,
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                font={'color': '#ffffff'}
             )
             st.plotly_chart(fig, use_container_width=True)
         
-        # Data table
         st.subheader("Recent Analyses")
         st.dataframe(
             history_df[['text', 'fallacy', 'confidence']].tail(10).iloc[::-1],
@@ -446,7 +468,6 @@ with tab3:
             hide_index=True
         )
         
-        # Export button
         csv = history_df.to_csv(index=False)
         st.download_button(
             label="📥 Download History (CSV)",
@@ -461,13 +482,13 @@ with tab3:
 # Footer
 st.markdown("---")
 st.markdown("""
-<div style='text-align: center; color: #7f8c8d; padding: 2rem 0;'>
+<div style='text-align: center; color: #808080; padding: 2rem 0;'>
     <p style='margin: 0; font-size: 0.9rem;'>
         🚀 Built with Streamlit | 🧠 Powered by AI
     </p>
     <p style='margin: 0.5rem 0 0 0; font-size: 0.85rem;'>
         <a href='https://github.com/Av1352/Logical-Fallacy-Detection' target='_blank' 
-            style='color: #667eea; text-decoration: none;'>
+           style='color: #ff6b9d; text-decoration: none;'>
             View on GitHub →
         </a>
     </p>
